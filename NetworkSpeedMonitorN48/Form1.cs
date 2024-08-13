@@ -31,12 +31,13 @@ namespace NetworkSpeedMonitorN48
 
         private ContextMenuStrip mainWindowContextMenuStrip;
         private ContextMenuStrip networkInterfaceChooseContextMenuStrip;
+        private ContextMenuStrip trayMenu;
         private ToolStripMenuItem resetWindowPositionToolStripMenuItem;
         private ToolStripMenuItem alwaysOnTopToolStripMenuItem;
         private ToolStripMenuItem exitToolStripMenuItem;
+        private ToolStripMenuItem toggleMouseInteractionItem;
 
         private NotifyIcon trayIcon;
-        private ContextMenuStrip trayMenu;
         private bool mouseInteractionEnabled = true;
 
         public Form1()
@@ -64,11 +65,19 @@ namespace NetworkSpeedMonitorN48
             for (int i = 0; i < instanceNames.Length; i++)
             {
                 string instanceName = instanceNames[i];
-
                 uploadCounters[i] = new PerformanceCounter("Network Interface", "Bytes Sent/sec", instanceName);
                 downloadCounters[i] = new PerformanceCounter("Network Interface", "Bytes Received/sec", instanceName);
-            }
 
+                // Choose init network interface based on names, users can choose manully later.
+                if (instanceName.Contains("Eth"))
+                {
+                    line2NI = i;
+                }
+                if (instanceName.Contains("Wi-Fi"))
+                {
+                    line1NI = i;
+                }
+            }
 
             SetUpCommonToolStripMenuItems();
             SetUpMainWindowContextMenuStrip();
@@ -88,6 +97,8 @@ namespace NetworkSpeedMonitorN48
             alwaysOnTopToolStripMenuItem = new ToolStripMenuItem("Always on top", null, alwaysOnTopToolStripMenuItem_Click);
             alwaysOnTopToolStripMenuItem.Checked = this.TopMost;
             exitToolStripMenuItem = new ToolStripMenuItem("Exit", null, exitToolStripMenuItem_Click);
+            toggleMouseInteractionItem = new ToolStripMenuItem("Toggle Mouse Interaction", null, ToggleMouseInteraction_Click);
+            toggleMouseInteractionItem.Checked = mouseInteractionEnabled;
         }
 
         private void SetUpMainWindowContextMenuStrip()
@@ -119,9 +130,7 @@ namespace NetworkSpeedMonitorN48
             // Set up tray menu
             trayMenu = new ContextMenuStrip();
             trayIcon.ContextMenuStrip = trayMenu;
-
-            ToolStripMenuItem toggleMouseInteractionItem = new ToolStripMenuItem("Toggle Mouse Interaction", null, ToggleMouseInteraction_Click);
-            trayMenu.Items.Add(toggleMouseInteractionItem);
+            trayMenu.Opening += trayMenu_Opening;
         }
 
         private void MainWindowContextMenuStrip_Opening(object sender, EventArgs e)
@@ -135,8 +144,8 @@ namespace NetworkSpeedMonitorN48
         private void ToggleMouseInteraction_Click(object sender, EventArgs e)
         {
             mouseInteractionEnabled = !mouseInteractionEnabled;
+            toggleMouseInteractionItem.Checked = mouseInteractionEnabled;
             this.Enabled = mouseInteractionEnabled;
-            this.Text = mouseInteractionEnabled ? "Mouse Interaction Enabled" : "Mouse Interaction Disabled";
         }
 
         private void networkInterfaceChooseContextMenuStrip_Opening(object sender, EventArgs e)
@@ -150,6 +159,15 @@ namespace NetworkSpeedMonitorN48
                 item.Click += Item_Click;
                 networkInterfaceChooseContextMenuStrip.Items.Add(item);
             }
+        }
+
+        private void trayMenu_Opening(object sender, EventArgs e)
+        {
+            trayMenu.Items.Clear();
+            trayMenu.Items.Add(toggleMouseInteractionItem);
+            trayMenu.Items.Add(resetWindowPositionToolStripMenuItem);
+            trayMenu.Items.Add(alwaysOnTopToolStripMenuItem);
+            trayMenu.Items.Add(exitToolStripMenuItem);
         }
 
         private void Item_Click(object sender, EventArgs e)

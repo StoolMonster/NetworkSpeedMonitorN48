@@ -40,6 +40,9 @@ namespace NetworkSpeedMonitorN48
         private NotifyIcon trayIcon;
         private bool mouseInteractionEnabled = true;
 
+        private ToolTip labelWiFiToolTip;
+        private ToolTip labelEthToolTip;
+
         public Form1()
         {
             InitializeComponent();
@@ -78,6 +81,20 @@ namespace NetworkSpeedMonitorN48
                     line1NI = i;
                 }
             }
+
+            labelWiFiToolTip = new ToolTip();
+            labelWiFiToolTip.AutoPopDelay = 5000;
+            labelWiFiToolTip.InitialDelay = 500;
+            labelWiFiToolTip.ReshowDelay = 500;
+            labelWiFiToolTip.ShowAlways = true;
+            labelWiFiToolTip.SetToolTip(labelWiFi, instanceNames[line1NI]);
+
+            labelEthToolTip = new ToolTip();
+            labelEthToolTip.AutoPopDelay = 5000;
+            labelEthToolTip.InitialDelay = 500;
+            labelEthToolTip.ReshowDelay = 500;
+            labelEthToolTip.ShowAlways = true;
+            labelWiFiToolTip.SetToolTip(labelEth, instanceNames[line2NI]);  
 
             SetUpCommonToolStripMenuItems();
             SetUpMainWindowContextMenuStrip();
@@ -178,10 +195,12 @@ namespace NetworkSpeedMonitorN48
             if (networkInterfaceChooseContextMenuStrip.SourceControl == labelWiFi)
             {
                 line1NI = selectedInterfaceIndex;
+                labelWiFiToolTip.SetToolTip(labelWiFi, instanceNames[line1NI]);
             }
             else if (networkInterfaceChooseContextMenuStrip.SourceControl == labelEth)
             {
                 line2NI = selectedInterfaceIndex;
+                labelEthToolTip.SetToolTip(labelEth, instanceNames[line2NI]);
             }
         }
 
@@ -211,7 +230,7 @@ namespace NetworkSpeedMonitorN48
             bytes /= 1024;
             string[] sizes = { "KB", "MB", "GB", "TB" };
             int order = 0;
-            while (bytes >= 1024 && order < sizes.Length - 1)
+            while (bytes >= 999.0 && order < sizes.Length - 1)
             {
                 order++;
                 bytes /= 1024;

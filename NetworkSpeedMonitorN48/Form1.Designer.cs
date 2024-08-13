@@ -38,72 +38,72 @@
             // 
             // labelWiFi
             // 
-            this.labelWiFi.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWiFi.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelWiFi.Location = new System.Drawing.Point(0, 0);
             this.labelWiFi.Name = "labelWiFi";
-            this.labelWiFi.Size = new System.Drawing.Size(40, 20);
+            this.labelWiFi.Size = new System.Drawing.Size(50, 20);
             this.labelWiFi.TabIndex = 0;
             this.labelWiFi.Text = "WiFi";
             this.labelWiFi.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelEth
             // 
-            this.labelEth.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.labelEth.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelEth.Location = new System.Drawing.Point(0, 20);
             this.labelEth.Name = "labelEth";
-            this.labelEth.Size = new System.Drawing.Size(40, 20);
+            this.labelEth.Size = new System.Drawing.Size(50, 20);
             this.labelEth.TabIndex = 1;
             this.labelEth.Text = "Eth";
             this.labelEth.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // labelWiFiSe
             // 
-            this.labelWiFiSe.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelWiFiSe.Location = new System.Drawing.Point(46, 0);
+            this.labelWiFiSe.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWiFiSe.Location = new System.Drawing.Point(50, 0);
             this.labelWiFiSe.Name = "labelWiFiSe";
-            this.labelWiFiSe.Size = new System.Drawing.Size(80, 20);
+            this.labelWiFiSe.Size = new System.Drawing.Size(100, 20);
             this.labelWiFiSe.TabIndex = 2;
-            this.labelWiFiSe.Text = "0 KB/s";
+            this.labelWiFiSe.Text = "999.9 KB/s";
             this.labelWiFiSe.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelEthSe
             // 
-            this.labelEthSe.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelEthSe.Location = new System.Drawing.Point(46, 20);
+            this.labelEthSe.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEthSe.Location = new System.Drawing.Point(50, 20);
             this.labelEthSe.Name = "labelEthSe";
-            this.labelEthSe.Size = new System.Drawing.Size(80, 20);
+            this.labelEthSe.Size = new System.Drawing.Size(100, 20);
             this.labelEthSe.TabIndex = 3;
-            this.labelEthSe.Text = "0 KB/s";
+            this.labelEthSe.Text = "999.9 KB/s";
             this.labelEthSe.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelWiFiRe
             // 
-            this.labelWiFiRe.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelWiFiRe.Location = new System.Drawing.Point(132, 0);
+            this.labelWiFiRe.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWiFiRe.Location = new System.Drawing.Point(150, 0);
             this.labelWiFiRe.Name = "labelWiFiRe";
-            this.labelWiFiRe.Size = new System.Drawing.Size(80, 20);
+            this.labelWiFiRe.Size = new System.Drawing.Size(100, 20);
             this.labelWiFiRe.TabIndex = 4;
-            this.labelWiFiRe.Text = "0 KB/s";
+            this.labelWiFiRe.Text = "999.9 KB/s";
             this.labelWiFiRe.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelEthRe
             // 
-            this.labelEthRe.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.labelEthRe.Location = new System.Drawing.Point(132, 20);
+            this.labelEthRe.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEthRe.Location = new System.Drawing.Point(150, 20);
             this.labelEthRe.Name = "labelEthRe";
-            this.labelEthRe.Size = new System.Drawing.Size(80, 20);
+            this.labelEthRe.Size = new System.Drawing.Size(100, 20);
             this.labelEthRe.TabIndex = 5;
-            this.labelEthRe.Text = "0 KB/s";
+            this.labelEthRe.Text = "999.9 KB/s";
             this.labelEthRe.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.ClientSize = new System.Drawing.Size(241, 101);
+            this.ClientSize = new System.Drawing.Size(333, 83);
             this.Controls.Add(this.labelEthRe);
             this.Controls.Add(this.labelWiFiRe);
             this.Controls.Add(this.labelEthSe);

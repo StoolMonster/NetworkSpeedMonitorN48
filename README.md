@@ -1,4 +1,4 @@
-# Descirption
+# Description
 
 A simple network speed monitor based on .NET 4.8.
 
@@ -17,12 +17,22 @@ A simple network speed monitor based on .NET 4.8.
 	1. Reset window's position.
 	1. Close the window. 
 1. Right click on the tray icon to toggle mouse interaction with the window.
+1. Mouse hover on "WiFi" or "Eth" will show the network interface you choose.
 
 ## Some pictures
 
+**Right Click to choose network interface**
+
 ![rightclick](/img/rightclick.png)
+
+**Right Click menu**
 
 ![rightclick](/img/rightclick2.png)
 
+**Tray menu, toggle mouse interaction with the window**
+
 ![rightclick](/img/rightclick3.png)
 
+**Mouse hover to show the network interface**
+
+![hover](/img/mousehover.png)

@@ -29,6 +29,12 @@ namespace NetworkSpeedMonitorN48
         private int line1NI = 0;
         private int line2NI = 0;
 
+        private ContextMenuStrip mainWindowContextMenuStrip;
+        private ContextMenuStrip networkInterfaceChooseContextMenuStrip;
+        private ToolStripMenuItem resetWindowPositionToolStripMenuItem;
+        private ToolStripMenuItem alwaysOnTopToolStripMenuItem;
+        private ToolStripMenuItem exitToolStripMenuItem;
+
         private NotifyIcon trayIcon;
         private ContextMenuStrip trayMenu;
         private bool mouseInteractionEnabled = true;
@@ -38,7 +44,6 @@ namespace NetworkSpeedMonitorN48
             InitializeComponent();
 
             this.TopMost = true;
-
             ResetWindowPosition();
 
             //
@@ -64,11 +69,45 @@ namespace NetworkSpeedMonitorN48
                 downloadCounters[i] = new PerformanceCounter("Network Interface", "Bytes Received/sec", instanceName);
             }
 
-            // Set up ContextMenuStrip to choose which network interface to show.
-            contextMenuStrip2.Opening += ContextMenuStrip2_Opening;
-            labelWiFi.ContextMenuStrip = contextMenuStrip2;
-            labelEth.ContextMenuStrip = contextMenuStrip2;
 
+            SetUpCommonToolStripMenuItems();
+            SetUpMainWindowContextMenuStrip();
+            SetUpNetworkInterfaceChooseContextMenuStrip();
+            SetUpTray();
+
+            // Set up update timer
+            timer = new System.Windows.Forms.Timer();
+            timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
+            timer.Start();
+        }
+
+        private void SetUpCommonToolStripMenuItems()
+        {
+            resetWindowPositionToolStripMenuItem = new ToolStripMenuItem("Reset window position", null, resetWindowPositionToolStripMenuItem_Click);
+            alwaysOnTopToolStripMenuItem = new ToolStripMenuItem("Always on top", null, alwaysOnTopToolStripMenuItem_Click);
+            alwaysOnTopToolStripMenuItem.Checked = this.TopMost;
+            exitToolStripMenuItem = new ToolStripMenuItem("Exit", null, exitToolStripMenuItem_Click);
+        }
+
+        private void SetUpMainWindowContextMenuStrip()
+        {
+            mainWindowContextMenuStrip = new ContextMenuStrip();
+            this.ContextMenuStrip = mainWindowContextMenuStrip;
+            mainWindowContextMenuStrip.Opening += MainWindowContextMenuStrip_Opening;
+        }
+
+        private void SetUpNetworkInterfaceChooseContextMenuStrip()
+        {
+            // Set up ContextMenuStrip to choose which network interface to show.
+            networkInterfaceChooseContextMenuStrip = new ContextMenuStrip();
+            networkInterfaceChooseContextMenuStrip.Opening += networkInterfaceChooseContextMenuStrip_Opening;
+            labelWiFi.ContextMenuStrip = networkInterfaceChooseContextMenuStrip;
+            labelEth.ContextMenuStrip = networkInterfaceChooseContextMenuStrip;
+        }
+
+        private void SetUpTray()
+        {
             // Set up tray icon
             trayIcon = new NotifyIcon
             {
@@ -79,15 +118,18 @@ namespace NetworkSpeedMonitorN48
 
             // Set up tray menu
             trayMenu = new ContextMenuStrip();
-            ToolStripMenuItem toggleMouseInteractionItem = new ToolStripMenuItem("Toggle Mouse Interaction", null, ToggleMouseInteraction_Click);
-            trayMenu.Items.Add(toggleMouseInteractionItem);
             trayIcon.ContextMenuStrip = trayMenu;
 
-            // Set up update timer
-            timer = new System.Windows.Forms.Timer();
-            timer.Interval = 1000;
-            timer.Tick += Timer_Tick;
-            timer.Start();
+            ToolStripMenuItem toggleMouseInteractionItem = new ToolStripMenuItem("Toggle Mouse Interaction", null, ToggleMouseInteraction_Click);
+            trayMenu.Items.Add(toggleMouseInteractionItem);
+        }
+
+        private void MainWindowContextMenuStrip_Opening(object sender, EventArgs e)
+        {
+            mainWindowContextMenuStrip.Items.Clear();
+            mainWindowContextMenuStrip.Items.Add(resetWindowPositionToolStripMenuItem);
+            mainWindowContextMenuStrip.Items.Add(alwaysOnTopToolStripMenuItem);
+            mainWindowContextMenuStrip.Items.Add(exitToolStripMenuItem);
         }
 
         private void ToggleMouseInteraction_Click(object sender, EventArgs e)
@@ -97,29 +139,29 @@ namespace NetworkSpeedMonitorN48
             this.Text = mouseInteractionEnabled ? "Mouse Interaction Enabled" : "Mouse Interaction Disabled";
         }
 
-        private void ContextMenuStrip2_Opening(object sender, EventArgs e)
+        private void networkInterfaceChooseContextMenuStrip_Opening(object sender, EventArgs e)
         {
-            contextMenuStrip2.Items.Clear();
+            networkInterfaceChooseContextMenuStrip.Items.Clear();
 
             for (int i = 0; i < instanceNames.Length; i++)
             {
                 ToolStripMenuItem item = new ToolStripMenuItem(instanceNames[i]);
                 item.Tag = instanceNames[i];
                 item.Click += Item_Click;
-                contextMenuStrip2.Items.Add(item);
+                networkInterfaceChooseContextMenuStrip.Items.Add(item);
             }
         }
 
         private void Item_Click(object sender, EventArgs e)
         {
             var selectedItem = (ToolStripMenuItem)sender;
-            int selectedInterfaceIndex = contextMenuStrip2.Items.IndexOf(selectedItem);
+            int selectedInterfaceIndex = networkInterfaceChooseContextMenuStrip.Items.IndexOf(selectedItem);
 
-            if (contextMenuStrip2.SourceControl == labelWiFi)
+            if (networkInterfaceChooseContextMenuStrip.SourceControl == labelWiFi)
             {
                 line1NI = selectedInterfaceIndex;
             }
-            else if (contextMenuStrip2.SourceControl == labelEth)
+            else if (networkInterfaceChooseContextMenuStrip.SourceControl == labelEth)
             {
                 line2NI = selectedInterfaceIndex;
             }
@@ -170,26 +212,19 @@ namespace NetworkSpeedMonitorN48
             }
         }
 
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void keepOnTopToolStripMenuItem_Click(object sender, EventArgs e)
+        private void alwaysOnTopToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            // TODO
             this.TopMost = !this.TopMost;
-            if (this.TopMost)
-            {
-                keepOnTopToolStripMenuItem.Text = "Disbale Keep on Top";
-            }
-            else
-            {
-                keepOnTopToolStripMenuItem.Text = "Keep on Top";
-
-            }
+            alwaysOnTopToolStripMenuItem.Checked = this.TopMost;
         }
 
-        private void resetPositionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void resetWindowPositionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ResetWindowPosition();
         }

@@ -5,7 +5,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -43,11 +45,16 @@ namespace NetworkSpeedMonitorN48
         private ToolTip labelWiFiToolTip;
         private ToolTip labelEthToolTip;
 
+        [DllImport("dwmapi.dll", EntryPoint = "DwmGetColorizationColor")]
+        private static extern void DwmGetColorizationColor(out uint color, out bool opaqueBlend);
+
         public Form1()
         {
             InitializeComponent();
 
             this.TopMost = true;
+
+
             ResetWindowPosition();
 
             //
@@ -101,11 +108,32 @@ namespace NetworkSpeedMonitorN48
             SetUpNetworkInterfaceChooseContextMenuStrip();
             SetUpTray();
 
-            // Set up update timer
+            // Set up update timer of network speed
             timer = new System.Windows.Forms.Timer();
             timer.Interval = 1000;
-            timer.Tick += Timer_Tick;
+            timer.Tick += NetworkSpeedUpdate_Tick;
             timer.Start();
+        }
+
+        private void SetUpMainColor()
+        {
+            // TODO, there is a problem with this function.
+            // Set up window's background color as system accent color
+            uint colorizationColor;
+            bool opaqueBlend;
+
+            // Retrieve the system accent color using DwmGetColorizationColor
+            DwmGetColorizationColor(out colorizationColor, out opaqueBlend);
+            // Convert the retrieved color to a Color object
+            Color accentColor = Color.FromArgb(
+                (int)(colorizationColor >> 24),    // Alpha
+                (int)(colorizationColor & 0xFF),   // Red
+                (int)((colorizationColor >> 8) & 0xFF),  // Green
+                (int)((colorizationColor >> 16) & 0xFF)  // Blue
+            );
+
+            // Set the form's BackColor to the system accent color
+            this.BackColor = accentColor;
         }
 
         private void SetUpCommonToolStripMenuItems()
@@ -212,7 +240,7 @@ namespace NetworkSpeedMonitorN48
             this.Location = new Point(x, y);
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void NetworkSpeedUpdate_Tick(object sender, EventArgs e)
         {
             string uploadSpeed = FormatBytes(uploadCounters[line1NI].NextValue());
             string downloadSpeed = FormatBytes(downloadCounters[line1NI].NextValue());
@@ -256,7 +284,6 @@ namespace NetworkSpeedMonitorN48
 
         private void alwaysOnTopToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            // TODO
             this.TopMost = !this.TopMost;
             alwaysOnTopToolStripMenuItem.Checked = this.TopMost;
         }
@@ -264,6 +291,25 @@ namespace NetworkSpeedMonitorN48
         private void resetWindowPositionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ResetWindowPosition();
+        }
+
+
+        // 重写 WndProc 方法来拦截和处理 Windows 消息。
+        protected override void WndProc(ref Message m)
+        {
+            const int WM_ACTIVATE = 0x0006; // 当窗口被激活或失去激活状态时发送的消息。
+            const int WM_NCACTIVATE = 0x0086; // 当非客户区（如标题栏）激活或失去激活状态时发送的消息。
+            const int WM_MOUSEACTIVATE = 0x0021; // 当鼠标激活窗口时发送的消息。
+            const int WM_WINDOWPOSCHANGING = 0x0046; // 在窗口位置或大小正在改变时发送的消息。
+
+            base.WndProc(ref m);
+
+            // 处理表单激活和窗口位置变化等消息
+            if (m.Msg == WM_ACTIVATE || m.Msg == WM_NCACTIVATE || m.Msg == WM_MOUSEACTIVATE || m.Msg == WM_WINDOWPOSCHANGING)
+            {
+                // 确保表单始终置顶
+                this.TopMost = true;
+            }
         }
     }
 }
